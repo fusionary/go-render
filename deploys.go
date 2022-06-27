@@ -1,9 +1,10 @@
-package deploys
+package render
 
 import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 )
@@ -23,14 +24,14 @@ type Deploy struct {
 	updatedAt  *time.Time `json:"updatedAt,omitempty"`
 }
 
-func TriggerDeploy(ctx context.Context, serviceId string) *bool {
-	url := fmt.Sprintf("https://api.render.com/v1/services/%v/deploys", serviceId)
+func TriggerDeploy(ctx context.Context, serviceId string) bool {
+	url := fmt.Sprintf("https://api.render.com/v1/services/%s/deploys", serviceId)
 
 	req, _ := http.NewRequest("POST", url, nil)
 
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", ctx.Value("token")))
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", ctx.Value("token")))
 
 	res, _ := http.DefaultClient.Do(req)
 
@@ -40,6 +41,7 @@ func TriggerDeploy(ctx context.Context, serviceId string) *bool {
 	if res.StatusCode == 201 {
 		return true
 	} else {
+		log.Printf("%d %s", res.StatusCode, body)
 		return false
 	}
 }

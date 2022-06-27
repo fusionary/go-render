@@ -23,7 +23,7 @@ func CreateJob(ctx context.Context, serviceId string) bool {
 	defer res.Body.Close()
 	// body, _ := ioutil.ReadAll(res.Body)
 
-	if res.StatusCode == 200 {
+	if res.StatusCode == 200 || res.StatusCode == 201 {
 		return true
 	} else {
 		return false
