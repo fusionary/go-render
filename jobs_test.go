@@ -8,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func TestTriggerDeploy(t *testing.T) {
+func TestCreateJob(t *testing.T) {
 	godotenv.Load(".env")
 
 	token := os.Getenv("TOKEN")
@@ -16,8 +16,8 @@ func TestTriggerDeploy(t *testing.T) {
 	ctx := context.Background()
 	ctx = StoreAuthentication(ctx, token)
 
-	got := TriggerDeploy(ctx, os.Getenv("DEPLOY_TEST_SERVICEID"))
+	got := CreateJob(ctx, os.Getenv("JOB_TEST_SERVICEID"))
 	if got == false {
-		t.Errorf("TriggerDeploy %v != true", got)
+		t.Errorf("CreateJob %v != true", got)
 	}
 }

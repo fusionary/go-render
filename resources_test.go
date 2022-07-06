@@ -8,8 +8,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// var token = flag.String("key", "", "Render API Key")
-
 func TestCreateResource(t *testing.T) {
 	godotenv.Load(".env")
 
