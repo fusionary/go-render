@@ -12,7 +12,7 @@ import (
 
 type ResourceGetEnvOptions struct {
 	Cursor string `url:"cursor"`
-	Limit  string `url:"limit"`
+	Limit  int    `url:"limit"`
 }
 
 type EnvVar struct {
