@@ -11,11 +11,11 @@ type ServicesService service
 type ServiceType string
 
 const (
-	StaticSite       string = "static_site"
-	WebService       string = "web_service"
-	PrivateService   string = "private_service"
-	BackgroundWorker string = "background_worker"
-	CronJob          string = "cron_job"
+	StaticSite       ServiceType = "static_site"
+	WebService       ServiceType = "web_service"
+	PrivateService   ServiceType = "private_service"
+	BackgroundWorker ServiceType = "background_worker"
+	CronJob          ServiceType = "cron_job"
 )
 
 type ServiceListOptions struct {
