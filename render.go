@@ -37,11 +37,12 @@ type Client struct {
 
 	AuthToken string
 
-	rateMu sync.Mutex
+	//rateMu sync.Mutex
 	//rateLimits [categories]Rate // Rate limits for the client as determined by the most recent API calls.
 
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
+	Deploys  *DeploysService
 	Services *ServicesService
 }
 
@@ -69,6 +70,7 @@ func NewClient(httpClient *http.Client, authToken string) *Client {
 
 	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent, AuthToken: authToken}
 	c.common.client = c
+	c.Deploys = (*DeploysService)(&c.common)
 	c.Services = (*ServicesService)(&c.common)
 	return c
 }
