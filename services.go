@@ -18,6 +18,87 @@ const (
 	CronJob          ServiceType = "cron_job"
 )
 
+type YesNo string
+
+const (
+	Yes YesNo = "yes"
+	No  YesNo = "no"
+)
+
+type RouteType string
+
+const (
+	Redirect RouteType = "redirect"
+	Rewrite  RouteType = "rewrite"
+)
+
+type ServiceEnvironmentType string
+
+const (
+	Docker ServiceEnvironmentType = "docker"
+	Elixir ServiceEnvironmentType = "elixir"
+	Go     ServiceEnvironmentType = "go"
+	Node   ServiceEnvironmentType = "node"
+	Python ServiceEnvironmentType = "python"
+	Ruby   ServiceEnvironmentType = "ruby"
+	Rust   ServiceEnvironmentType = "rust"
+)
+
+type ServiceRegion string
+
+const (
+	Oregon    ServiceRegion = "oregon"
+	Frankfort ServiceRegion = "frankfort"
+	Ohio      ServiceRegion = "ohio"
+)
+
+type ServicePlan string
+
+const (
+	Starter      ServicePlan = "starter"
+	StarterPlus  ServicePlan = "starter_plus"
+	Standard     ServicePlan = "standard"
+	StandardPlus ServicePlan = "standard_plus"
+	Pro          ServicePlan = "pro"
+	ProPlus      ServicePlan = "pro_plus"
+	ProMax       ServicePlan = "pro_max"
+	ProUltra     ServicePlan = "pro_ultra"
+)
+
+type SecretFile struct {
+	Name     string `json:"name,omitempty"`
+	Contents string `json:"contents,omitempty"`
+}
+
+type Header struct {
+	Path  string `json:"path,omitempty"`
+	Name  string `json:"name,omitempty"`
+	Value string `json:"value,omitempty"`
+}
+
+type Route struct {
+	Type        RouteType `json:"type,omitempty"`
+	Source      string    `json:"source,omitempty"`
+	Destination string    `json:"destination,omitempty"`
+}
+
+type ServiceDisk struct {
+	Name      string `json:"name,omitempty"`
+	MountPath string `json:"mountPath,omitempty"`
+	SizeGB    int    `json:"sizeGB,omitempty"`
+}
+
+type ServiceEnvironmentDockerDetailsPost struct {
+	DockerCommand  string `json:"dockerCommand,omitempty"`
+	DockerContext  string `json:"dockerContext,omitempty"`
+	DockerfilePath string `json:"dockerfilePath,omitempty"`
+}
+
+type SpecificEnvironmentNativeDetailsPost struct {
+	BuildCommand string `json:"buildCommand,omitempty"`
+	StartCommand string `json:"startCommand,omitempty"`
+}
+
 type ServiceListOptions struct {
 	Name          []string      `url:"name"`
 	ServiceType   []ServiceType `url:"type"`
@@ -34,25 +115,84 @@ type ServiceListOptions struct {
 }
 
 type Service struct {
-	Id             string    `json:"id,omitempty"`
-	AutoDeploy     string    `json:"autoDeploy,omitempty"`
-	Branch         string    `json:"branch:omitempty"`
-	CreatedAt      time.Time `json:"createdAt,omitempty"`
-	Name           string    `json:"name,omitempty"`
-	NotifyOnFail   string    `json:"notifyOnFail,omitempty"`
-	OwnerId        string    `json:"ownerId,omitempty"`
-	Repo           string    `json:"repo,omitempty"`
-	Slug           string    `json:"slug,omitempty"`
-	Suspended      string    `json:"suspended,omitempty"`
-	Suspenders     []string  `json:"suspenders,omitempty"`
-	ServiceType    string    `json:"type,omitempty"`
-	UpdatedAt      time.Time `json:"updatedAt,omitempty"`
-	ServiceDetails any       `json:"serviceDetails,omitempty"`
+	Id             string      `json:"id,omitempty"`
+	AutoDeploy     string      `json:"autoDeploy,omitempty"`
+	Branch         string      `json:"branch:omitempty"`
+	CreatedAt      time.Time   `json:"createdAt,omitempty"`
+	Name           string      `json:"name,omitempty"`
+	NotifyOnFail   string      `json:"notifyOnFail,omitempty"`
+	OwnerId        string      `json:"ownerId,omitempty"`
+	Repo           string      `json:"repo,omitempty"`
+	Slug           string      `json:"slug,omitempty"`
+	Suspended      string      `json:"suspended,omitempty"`
+	Suspenders     []string    `json:"suspenders,omitempty"`
+	ServiceType    ServiceType `json:"type,omitempty"`
+	UpdatedAt      time.Time   `json:"updatedAt,omitempty"`
+	ServiceDetails any         `json:"serviceDetails,omitempty"`
 }
 
 type ServiceResponse struct {
 	Service []*Service `json:"service,omitempty"`
 	Cursor  string     `json:"string,omitempty"`
+}
+
+type ServiceCreateBody struct {
+	ServiceType          ServiceType  `json:"type,omitempty"`
+	Name                 string       `json:"name,omitempty"`
+	OwnerId              string       `json:"ownerId,omitempty"`
+	Repo                 string       `json:"repo,omitempty"`
+	AutoDeploy           YesNo        `json:"autoDeploy,omitempty"`
+	Branch               string       `json:"branch,omitempty"`
+	EnvironmentVariables []string     `json:"envVars,omitempty"`
+	SecretFiles          []SecretFile `json:"secretFiles,omitempty"`
+	ServiceDetails       any          `json:"serviceDetails,omitempty"`
+}
+
+type ServiceStaticSiteDetailsPost struct {
+	BuildCommand               string   `json:"buildCommand,omitempty"`
+	Headers                    []Header `json:"headers,omitempty"`
+	PublishPath                string   `json:"publishPath,omitempty"`
+	PullRequestPreviewsEnabled YesNo    `json:"pullRequestPreviewsEnabled,omitempty"`
+	Routes                     []Route  `json:"routes,omitempty"`
+}
+
+type ServiceWebServiceDetailsPost struct {
+	Disk                       ServiceDisk            `json:"disk,omitempty"`
+	Environment                ServiceEnvironmentType `json:"env,omitempty"`
+	EnvironmentSpecificDetails any                    `json:"envSpecificDetails,omitempty"`
+	HealthCheckPath            string                 `json:"healthCheckPath,omitempty"`
+	NumberOfInstances          int                    `json:"numInstances,omitempty"`
+	Plan                       ServicePlan            `json:"plan,omitempty"`
+	PullRequestPreviewsEnabled YesNo                  `json:"pullRequestPreviewsEnabled,omitempty"`
+	Region                     ServiceRegion          `json:"region,omitempty"`
+}
+
+type ServicePrivateServiceDetailsPost struct {
+	Disk                       ServiceDisk            `json:"disk,omitempty"`
+	Environment                ServiceEnvironmentType `json:"env,omitempty"`
+	EnvironmentSpecificDetails any                    `json:"envSpecificDetails,omitempty"`
+	NumberOfInstances          int                    `json:"numInstances,omitempty"`
+	Plan                       ServicePlan            `json:"plan,omitempty"`
+	PullRequestPreviewsEnabled YesNo                  `json:"pullRequestPreviewsEnabled,omitempty"`
+	Region                     ServiceRegion          `json:"region,omitempty"`
+}
+
+type ServiceBackgroundWorkerDetailsPost struct {
+	Disk                       ServiceDisk            `json:"disk,omitempty"`
+	Environment                ServiceEnvironmentType `json:"env,omitempty"`
+	EnvironmentSpecificDetails any                    `json:"envSpecificDetails,omitempty"`
+	NumberOfInstances          int                    `json:"numInstances,omitempty"`
+	Plan                       ServicePlan            `json:"plan,omitempty"`
+	PullRequestPreviewsEnabled YesNo                  `json:"pullRequestPreviewsEnabled,omitempty"`
+	Region                     ServiceRegion          `json:"region,omitempty"`
+}
+
+type ServiceCronJobDetailsPost struct {
+	Environment                ServiceEnvironmentType `json:"env,omitempty"`
+	EnvironmentSpecificDetails any                    `json:"envSpecificDetails,omitempty"`
+	Plan                       ServicePlan            `json:"plan,omitempty"`
+	Region                     ServiceRegion          `json:"region,omitempty"`
+	Schedule                   string                 `json:"schedule,omitempty"`
 }
 
 func (s *ServicesService) ListServices(ctx context.Context, opts *ServiceListOptions) (*[]ServiceResponse, *http.Response, error) {
@@ -74,4 +214,20 @@ func (s *ServicesService) ListServices(ctx context.Context, opts *ServiceListOpt
 	}
 
 	return serviceResponse, res, nil
+}
+
+func (s *ServicesService) CreateService(ctx context.Context, body *ServiceCreateBody) (*Service, *http.Response, error) {
+	url := "services"
+	req, err := s.client.NewRequest("POST", url, body)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var service *Service
+	res, err := s.client.Do(ctx, req, &service)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return service, res, nil
 }
