@@ -21,7 +21,7 @@ func TestServiceList(t *testing.T) {
 	data, res, err := client.Services.ListServices(ctx, options)
 	if err != nil {
 		fmt.Printf("Error while getting results")
-		fmt.Printf(err.Error())
+		fmt.Println(err)
 	} else {
 		log.Printf("%d %d", res.StatusCode, len(*data))
 	}
