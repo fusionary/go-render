@@ -43,6 +43,7 @@ type Client struct {
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	Deploys  *DeploysService
+	Jobs     *JobsService
 	Services *ServicesService
 }
 
@@ -71,6 +72,7 @@ func NewClient(httpClient *http.Client, authToken string) *Client {
 	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent, AuthToken: authToken}
 	c.common.client = c
 	c.Deploys = (*DeploysService)(&c.common)
+	c.Jobs = (*JobsService)(&c.common)
 	c.Services = (*ServicesService)(&c.common)
 	return c
 }
