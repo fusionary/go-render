@@ -21,7 +21,7 @@ type Deploy struct {
 	Status     *string    `json:"status,omitempty"`
 	FinishedAt *time.Time `json:"finishedAt,omitempty"`
 	CreatedAt  *time.Time `json:"createdAt,omitempty"`
-	CpdatedAt  *time.Time `json:"updatedAt,omitempty"`
+	UpdatedAt  *time.Time `json:"updatedAt,omitempty"`
 }
 
 type DeployTriggerCacheClear string
