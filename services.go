@@ -2,6 +2,7 @@ package render
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -195,6 +196,58 @@ type ServiceCronJobDetailsPost struct {
 	Schedule                   string                 `json:"schedule,omitempty"`
 }
 
+type ServiceUpdateBody struct {
+	AutoDeploy     YesNo          `json:"autoDeploy,omitempty"`
+	Branch         string         `json:"branch,omitempty"`
+	Name           string         `json:"name,omitempty"`
+	ServiceDetails ServiceDetails `json:"serviceDetails,omitempty"`
+}
+
+type ParentServer struct {
+	Id   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+
+type ServiceDetails struct {
+	BuildCommand               string       `json:"buildCommand,omitempty"`
+	ParentServer               ParentServer `json:"parentServer,omitempty"`
+	PublishPath                string       `json:"publishPath,omitempty"`
+	PullRequestPreviewsEnabled string       `json:"pullRequestPreviewsEnabled,omitempty"`
+	Url                        string       `json:"url,omitempty"`
+}
+
+type ServiceUpdate struct {
+	Id             string         `json:"id,omitempty"`
+	AutoDeploy     string         `json:"autoDeploy,omitempty"`
+	Branch         string         `json:"branch,omitempty"`
+	CreatedAt      time.Time      `json:"createdAt,omitempty"`
+	Name           string         `json:"name,omitempty"`
+	NotifyOnFail   string         `json:"notifyOnFail,omitempty"`
+	OwnerId        string         `json:"ownerId,omitempty"`
+	Repo           string         `json:"repo,omitempty"`
+	Slug           string         `json:"slug,omitempty"`
+	Suspended      string         `json:"suspended,omitempty"`
+	Suspenders     []string       `json:"suspenders,omitempty"`
+	Type           string         `json:"type,omitempty"`
+	UpdatedAt      time.Time      `json:"updatedAt,omitempty"`
+	ServiceDetails ServiceDetails `json:"serviceDetails,omitempty"`
+}
+
+type ResourceGetEnvOptions struct {
+	Cursor string `url:"cursor"`
+	Limit  int    `url:"limit"`
+}
+
+type EnvVar struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+type ServiceEnvVar struct {
+	Env    EnvVar `json:"envVar"`
+	Cursor string `json:"cursor,omitempty"`
+}
+
 func (s *ServicesService) ListServices(ctx context.Context, opts *ServiceListOptions) (*[]ServiceResponse, *http.Response, error) {
 	url := "services"
 	url, err := addOptions(url, opts)
@@ -230,4 +283,38 @@ func (s *ServicesService) CreateService(ctx context.Context, body *ServiceCreate
 	}
 
 	return service, res, nil
+}
+
+func (s *ServicesService) UpdateService(ctx context.Context, serviceId string, body *ServiceUpdateBody) (*ServiceUpdate, *http.Response, error) {
+	url := fmt.Sprintf("services/%s", serviceId)
+
+	req, err := s.client.NewRequest("PATCH", url, body)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var serviceUpdate *ServiceUpdate
+	res, err := s.client.Do(ctx, req, &serviceUpdate)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return serviceUpdate, res, err
+}
+
+func (s *ServicesService) ServiceGetEnvVars(ctx context.Context, serviceId string, opts *ResourceGetEnvOptions) (*[]ServiceEnvVar, *http.Response, error) {
+	url := fmt.Sprintf("services/%s/env-vars", serviceId)
+
+	req, err := s.client.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var envVars *[]ServiceEnvVar
+	res, err := s.client.Do(ctx, req, &envVars)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return envVars, res, err
 }
