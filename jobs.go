@@ -3,29 +3,41 @@ package render
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
-	"strings"
 )
 
-func CreateJob(ctx context.Context, serviceId string) bool {
-	url := fmt.Sprintf("https://api.render.com/v1/services/%v/jobs", serviceId)
+type JobsService service
 
-	payload := strings.NewReader("{\"startCommand\":\"node index.js\"}")
+type Job struct {
+	Id           string `json:"id,omitempty"`
+	ServiceId    string `json:"serviceId,omitempty"`
+	StartCommand string `json:"startCommand,omitempty"`
+	PlanId       string `json:"planId,omitempty"`
+	Status       string `json:"status,omitempty"`
+	CreatedAt    string `json:"createdAt,omitempty"`
+	StartedAt    string `json:"startedAt,omitempty"`
+	FinishedAt   string `json:"finishedAt,omitempty"`
+}
 
-	req, _ := http.NewRequest("POST", url, payload)
+type JobCreateBody struct {
+	StartCommand string `json:"startCommand,omitempty"`
+	PlanId       string `json:"planId,omitempty"`
+}
 
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %v", ctx.Value("token")))
-
-	res, _ := http.DefaultClient.Do(req)
-
-	defer res.Body.Close()
-	// body, _ := ioutil.ReadAll(res.Body)
-
-	if res.StatusCode == 200 || res.StatusCode == 201 {
-		return true
-	} else {
-		return false
+func (s *JobsService) CreateJob(ctx context.Context, serviceId string, jobCreateBody JobCreateBody) (*Job, *http.Response, error) {
+	url := fmt.Sprintf("services/%s/jobs", serviceId)
+	log.Println(url)
+	req, err := s.client.NewRequest("POST", url, jobCreateBody)
+	if err != nil {
+		return nil, nil, err
 	}
+
+	var job *Job
+	res, err := s.client.Do(ctx, req, &job)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return job, res, nil
 }

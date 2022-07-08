@@ -3,45 +3,51 @@ package render
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 )
 
+type DeploysService service
+
 type Commit struct {
-	id        *string    `json:"id,omitempty"`
-	message   *string    `json:"message,omitempty"`
-	createdAt *time.Time `json:"createdAt,omitempty"`
+	Id        *string    `json:"id,omitempty"`
+	Message   *string    `json:"message,omitempty"`
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
 }
 
 type Deploy struct {
-	id         *string    `json:"id,omitempty"`
-	commit     *Commit    `json:"commit,omitempty"`
-	status     *string    `json:"status,omitempty"`
-	finishedAt *time.Time `json:"finishedAt,omitempty"`
-	createdAt  *time.Time `json:"createdAt,omitempty"`
-	updatedAt  *time.Time `json:"updatedAt,omitempty"`
+	Id         *string    `json:"id,omitempty"`
+	Commit     *Commit    `json:"commit,omitempty"`
+	Status     *string    `json:"status,omitempty"`
+	FinishedAt *time.Time `json:"finishedAt,omitempty"`
+	CreatedAt  *time.Time `json:"createdAt,omitempty"`
+	UpdatedAt  *time.Time `json:"updatedAt,omitempty"`
 }
 
-func TriggerDeploy(ctx context.Context, serviceId string) bool {
-	url := fmt.Sprintf("https://api.render.com/v1/services/%s/deploys", serviceId)
+type DeployTriggerCacheClear string
 
-	req, _ := http.NewRequest("POST", url, nil)
+const (
+	DoNotClear DeployTriggerCacheClear = "do_not_clear"
+	Clear      DeployTriggerCacheClear = "clear"
+)
 
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", ctx.Value("token")))
+type DeployTriggerBody struct {
+	ClearCache DeployTriggerCacheClear `json:"clearCache,omitempty"`
+}
 
-	res, _ := http.DefaultClient.Do(req)
+func (s *DeploysService) TriggerADeployment(ctx context.Context, serviceId string, deployTriggerBody DeployTriggerBody) (*Deploy, *http.Response, error) {
+	url := fmt.Sprintf("services/%s/deploys", serviceId)
 
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
-
-	if res.StatusCode == 201 {
-		return true
-	} else {
-		log.Printf("%d %s", res.StatusCode, body)
-		return false
+	req, err := s.client.NewRequest("POST", url, deployTriggerBody)
+	if err != nil {
+		return nil, nil, err
 	}
+
+	var deploy *Deploy
+	res, err := s.client.Do(ctx, req, &deploy)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return deploy, res, nil
 }
