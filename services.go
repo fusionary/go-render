@@ -133,7 +133,7 @@ type Service struct {
 
 type ServiceResponse struct {
 	Service []*Service `json:"service,omitempty"`
-	Cursor  string     `json:"string,omitempty"`
+	Cursor  string     `json:"cursor,omitempty"`
 }
 
 type ServiceCreateBody struct {
