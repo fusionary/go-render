@@ -318,3 +318,20 @@ func (s *ServicesService) ServiceGetEnvVars(ctx context.Context, serviceId strin
 
 	return envVars, res, err
 }
+
+func (s *ServicesService) ServiceUpdateEnvVars(ctx context.Context, serviceId string, opts *[]ServiceEnvVar) (*[]ServiceEnvVar, *http.Response, error) {
+	url := fmt.Sprintf("services/%s/env-vars", serviceId)
+
+	req, err := s.client.NewRequest("PUT", url, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var envVars *[]ServiceEnvVar
+	res, err := s.client.Do(ctx, req, &envVars)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return envVars, res, err
+}
