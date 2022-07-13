@@ -158,7 +158,7 @@ type ServiceStaticSiteDetailsPost struct {
 }
 
 type ServiceWebServiceDetailsPost struct {
-	Disk                       ServiceDisk            `json:"disk,omitempty"`
+	Disk                       *ServiceDisk           `json:"disk,omitempty"`
 	Environment                ServiceEnvironmentType `json:"env,omitempty"`
 	EnvironmentSpecificDetails any                    `json:"envSpecificDetails,omitempty"`
 	HealthCheckPath            string                 `json:"healthCheckPath,omitempty"`
@@ -217,7 +217,7 @@ type ServiceDetails struct {
 	Env                        ServiceEnvironmentType              `json:"env,omitempty"`
 	Plan                       ServicePlan                         `json:"plan,omitempty"`
 	Region                     ServiceRegion                       `json:"region,omitempty"`
-	Disk                       ServiceDisk                         `json:"disk,omitempty"`
+	Disk                       *ServiceDisk                        `json:"disk,omitempty"`
 	HealthCheckPath            string                              `json:"healthCheckPath,omitempty"`
 	EnvSpecificDetails         ServiceEnvironmentDockerDetailsPost `json:"envSpecificDetails,omitempty"`
 }
