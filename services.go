@@ -138,15 +138,15 @@ type ServiceResponse struct {
 }
 
 type ServiceCreateBody struct {
-	ServiceType          ServiceType     `json:"type,omitempty"`
-	Name                 string          `json:"name,omitempty"`
-	OwnerId              string          `json:"ownerId,omitempty"`
-	Repo                 string          `json:"repo,omitempty"`
-	AutoDeploy           YesNo           `json:"autoDeploy,omitempty"`
-	Branch               string          `json:"branch,omitempty"`
-	EnvironmentVariables []ServiceEnvVar `json:"envVars,omitempty"`
-	SecretFiles          []SecretFile    `json:"secretFiles,omitempty"`
-	ServiceDetails       ServiceDetails  `json:"serviceDetails,omitempty"`
+	ServiceType          ServiceType    `json:"type,omitempty"`
+	Name                 string         `json:"name,omitempty"`
+	OwnerId              string         `json:"ownerId,omitempty"`
+	Repo                 string         `json:"repo,omitempty"`
+	AutoDeploy           YesNo          `json:"autoDeploy,omitempty"`
+	Branch               string         `json:"branch,omitempty"`
+	EnvironmentVariables []EnvVar       `json:"envVars,omitempty"`
+	SecretFiles          []SecretFile   `json:"secretFiles,omitempty"`
+	ServiceDetails       ServiceDetails `json:"serviceDetails,omitempty"`
 }
 
 type ServiceStaticSiteDetailsPost struct {
