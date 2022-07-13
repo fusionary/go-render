@@ -116,20 +116,20 @@ type ServiceListOptions struct {
 }
 
 type Service struct {
-	Id             string      `json:"id,omitempty"`
-	AutoDeploy     string      `json:"autoDeploy,omitempty"`
-	Branch         string      `json:"branch:omitempty"`
-	CreatedAt      time.Time   `json:"createdAt,omitempty"`
-	Name           string      `json:"name,omitempty"`
-	NotifyOnFail   string      `json:"notifyOnFail,omitempty"`
-	OwnerId        string      `json:"ownerId,omitempty"`
-	Repo           string      `json:"repo,omitempty"`
-	Slug           string      `json:"slug,omitempty"`
-	Suspended      string      `json:"suspended,omitempty"`
-	Suspenders     []string    `json:"suspenders,omitempty"`
-	ServiceType    ServiceType `json:"type,omitempty"`
-	UpdatedAt      time.Time   `json:"updatedAt,omitempty"`
-	ServiceDetails any         `json:"serviceDetails,omitempty"`
+	Id             string         `json:"id,omitempty"`
+	AutoDeploy     string         `json:"autoDeploy,omitempty"`
+	Branch         string         `json:"branch:omitempty"`
+	CreatedAt      time.Time      `json:"createdAt,omitempty"`
+	Name           string         `json:"name,omitempty"`
+	NotifyOnFail   string         `json:"notifyOnFail,omitempty"`
+	OwnerId        string         `json:"ownerId,omitempty"`
+	Repo           string         `json:"repo,omitempty"`
+	Slug           string         `json:"slug,omitempty"`
+	Suspended      string         `json:"suspended,omitempty"`
+	Suspenders     []string       `json:"suspenders,omitempty"`
+	ServiceType    ServiceType    `json:"type,omitempty"`
+	UpdatedAt      time.Time      `json:"updatedAt,omitempty"`
+	ServiceDetails ServiceDetails `json:"serviceDetails,omitempty"`
 }
 
 type ServiceResponse struct {
@@ -146,7 +146,7 @@ type ServiceCreateBody struct {
 	Branch               string          `json:"branch,omitempty"`
 	EnvironmentVariables []ServiceEnvVar `json:"envVars,omitempty"`
 	SecretFiles          []SecretFile    `json:"secretFiles,omitempty"`
-	ServiceDetails       any             `json:"serviceDetails,omitempty"`
+	ServiceDetails       ServiceDetails  `json:"serviceDetails,omitempty"`
 }
 
 type ServiceStaticSiteDetailsPost struct {
@@ -209,11 +209,17 @@ type ParentServer struct {
 }
 
 type ServiceDetails struct {
-	BuildCommand               string       `json:"buildCommand,omitempty"`
-	ParentServer               ParentServer `json:"parentServer,omitempty"`
-	PublishPath                string       `json:"publishPath,omitempty"`
-	PullRequestPreviewsEnabled string       `json:"pullRequestPreviewsEnabled,omitempty"`
-	Url                        string       `json:"url,omitempty"`
+	BuildCommand               string                              `json:"buildCommand,omitempty"`
+	ParentServer               ParentServer                        `json:"parentServer,omitempty"`
+	PublishPath                string                              `json:"publishPath,omitempty"`
+	PullRequestPreviewsEnabled YesNo                               `json:"pullRequestPreviewsEnabled,omitempty"`
+	Url                        string                              `json:"url,omitempty"`
+	Env                        ServiceEnvironmentType              `json:"env,omitempty"`
+	Plan                       ServicePlan                         `json:"plan,omitempty"`
+	Region                     ServiceRegion                       `json:"region,omitempty"`
+	Disk                       ServiceDisk                         `json:"disk,omitempty"`
+	HealthCheckPath            string                              `json:"healthCheckPath,omitempty"`
+	EnvSpecificDetails         ServiceEnvironmentDockerDetailsPost `json:"envSpecificDetails,omitempty"`
 }
 
 type ServiceUpdate struct {
