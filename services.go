@@ -132,6 +132,11 @@ type Service struct {
 	ServiceDetails ServiceDetails `json:"serviceDetails,omitempty"`
 }
 
+type CreatedService struct {
+	Service  Service `json:"service,omitempty"`
+	DeployId string  `json:"deployId,omitempty"`
+}
+
 type ServiceResponse struct {
 	Service []*Service `json:"service,omitempty"`
 	Cursor  string     `json:"cursor,omitempty"`
@@ -275,14 +280,14 @@ func (s *ServicesService) ListServices(ctx context.Context, opts *ServiceListOpt
 	return serviceResponse, res, nil
 }
 
-func (s *ServicesService) CreateService(ctx context.Context, body *ServiceCreateBody) (*Service, *http.Response, error) {
+func (s *ServicesService) CreateService(ctx context.Context, body *ServiceCreateBody) (*CreatedService, *http.Response, error) {
 	url := "services"
 	req, err := s.client.NewRequest("POST", url, body)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var service *Service
+	var service *CreatedService
 	res, err := s.client.Do(ctx, req, &service)
 	if err != nil {
 		return nil, nil, err
