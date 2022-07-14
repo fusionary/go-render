@@ -330,10 +330,10 @@ func (s *ServicesService) ServiceGetEnvVars(ctx context.Context, serviceId strin
 	return envVars, res, err
 }
 
-func (s *ServicesService) ServiceUpdateEnvVars(ctx context.Context, serviceId string, opts *[]ServiceEnvVar) (*[]ServiceEnvVar, *http.Response, error) {
+func (s *ServicesService) ServiceUpdateEnvVars(ctx context.Context, serviceId string, opts *[]EnvVar) (*[]ServiceEnvVar, *http.Response, error) {
 	url := fmt.Sprintf("services/%s/env-vars", serviceId)
 
-	req, err := s.client.NewRequest("PUT", url, nil)
+	req, err := s.client.NewRequest("PUT", url, opts)
 	if err != nil {
 		return nil, nil, err
 	}
