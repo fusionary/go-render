@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 type ServicesService service
@@ -315,6 +317,12 @@ func (s *ServicesService) UpdateService(ctx context.Context, serviceId string, b
 
 func (s *ServicesService) ServiceGetEnvVars(ctx context.Context, serviceId string, opts *ResourceGetEnvOptions) (*[]ServiceEnvVar, *http.Response, error) {
 	url := fmt.Sprintf("services/%s/env-vars", serviceId)
+
+	// Parse options into url query parameters
+	if opts != nil {
+		queryString, _ := query.Values(opts)
+		url += fmt.Sprintf("?%s", queryString.Encode())
+	}
 
 	req, err := s.client.NewRequest("GET", url, nil)
 	if err != nil {
