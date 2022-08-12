@@ -51,3 +51,20 @@ func (s *DeploysService) TriggerADeployment(ctx context.Context, serviceId strin
 
 	return deploy, res, nil
 }
+
+func (s *DeploysService) RetrieveDeploy(ctx context.Context, serviceId string, deployId string) (*Deploy, *http.Response, error) {
+	url := fmt.Sprintf("services/%s/deploys/%s", serviceId, deployId)
+
+	req, err := s.client.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var deploy *Deploy
+	res, err := s.client.Do(ctx, req, &deploy)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return deploy, res, nil
+}
