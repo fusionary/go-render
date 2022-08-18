@@ -140,8 +140,8 @@ type CreatedService struct {
 }
 
 type ServiceResponse struct {
-	Service []*Service `json:"service,omitempty"`
-	Cursor  string     `json:"cursor,omitempty"`
+	Service Service `json:"service,omitempty"`
+	Cursor  string  `json:"cursor,omitempty"`
 }
 
 type ServiceCreateBody struct {
@@ -313,6 +313,22 @@ func (s *ServicesService) UpdateService(ctx context.Context, serviceId string, b
 	}
 
 	return serviceUpdate, res, err
+}
+
+func (s *ServicesService) DeleteService(ctx context.Context, serviceId string) *http.Response {
+	url := fmt.Sprintf("services/%s", serviceId)
+
+	req, err := s.client.NewRequest("DELETE", url, nil)
+	if err != nil {
+		return nil
+	}
+
+	res, err := s.client.Do(ctx, req, nil)
+	if err != nil {
+		return nil
+	}
+
+	return res
 }
 
 func (s *ServicesService) ServiceGetEnvVars(ctx context.Context, serviceId string, opts *ResourceGetEnvOptions) (*[]ServiceEnvVar, *http.Response, error) {
