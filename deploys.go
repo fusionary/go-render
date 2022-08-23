@@ -16,12 +16,12 @@ type Commit struct {
 }
 
 type Deploy struct {
-	Id         *string    `json:"id,omitempty"`
-	Commit     *Commit    `json:"commit,omitempty"`
-	Status     *string    `json:"status,omitempty"`
-	FinishedAt *time.Time `json:"finishedAt,omitempty"`
-	CreatedAt  *time.Time `json:"createdAt,omitempty"`
-	UpdatedAt  *time.Time `json:"updatedAt,omitempty"`
+	Id         string    `json:"id,omitempty"`
+	Commit     Commit    `json:"commit,omitempty"`
+	Status     string    `json:"status,omitempty"`
+	FinishedAt time.Time `json:"finishedAt,omitempty"`
+	CreatedAt  time.Time `json:"createdAt,omitempty"`
+	UpdatedAt  time.Time `json:"updatedAt,omitempty"`
 }
 
 type DeployTriggerCacheClear string
