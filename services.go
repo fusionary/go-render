@@ -103,18 +103,18 @@ type SpecificEnvironmentNativeDetailsPost struct {
 }
 
 type ServiceListOptions struct {
-	Name          []string      `url:"name"`
-	ServiceType   []ServiceType `url:"type"`
-	Env           []string      `url:"env"`
-	Region        []string      `url:"region"`
-	Suspended     []string      `url:"suspended"`
-	CreatedBefore time.Time     `url:"createdBefore"`
-	CreatedAfter  time.Time     `url:"createdAfter"`
-	UpdatedBefore time.Time     `url:"updatedBefore"`
-	UpdatedAfter  time.Time     `url:"updatedAfter"`
-	OwnerId       []string      `url:"ownerId"`
-	Cursor        string        `url:"cursor"`
-	Limit         int           `url:"limit"`
+	Name          []string      `url:"name,omitempty"`
+	ServiceType   []ServiceType `url:"type,omitempty"`
+	Env           []string      `url:"env,omitempty"`
+	Region        []string      `url:"region,omitempty"`
+	Suspended     []string      `url:"suspended,omitempty"`
+	CreatedBefore time.Time     `url:"createdBefore,omitempty"`
+	CreatedAfter  time.Time     `url:"createdAfter,omitempty"`
+	UpdatedBefore time.Time     `url:"updatedBefore,omitempty"`
+	UpdatedAfter  time.Time     `url:"updatedAfter,omitempty"`
+	OwnerId       []string      `url:"ownerId,omitempty"`
+	Cursor        string        `url:"cursor,omitempty"`
+	Limit         int           `url:"limit,omitempty"`
 }
 
 type Service struct {
