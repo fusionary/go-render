@@ -79,11 +79,11 @@ func NewClient(httpClient *http.Client, authToken string) *Client {
 
 // Testing Client
 // Works the same as NewClient, but sends requests to RequestBin for debugging
-func NewTestClient(httpClient *http.Client, authToken string) *Client {
+func NewTestClient(httpClient *http.Client, authToken string, endpointId string) *Client {
 	if httpClient == nil {
 		httpClient = &http.Client{}
 	}
-	baseURL, _ := url.Parse("https://requestbin.io/17x13wb1/")
+	baseURL, _ := url.Parse(fmt.Sprintf("https://requestbin.io/%s/", endpointId))
 
 	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent, AuthToken: authToken}
 	c.common.client = c
