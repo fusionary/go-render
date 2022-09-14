@@ -41,3 +41,20 @@ func (s *JobsService) CreateJob(ctx context.Context, serviceId string, jobCreate
 
 	return job, res, nil
 }
+
+func (s *DeploysService) RetrieveJob(ctx context.Context, serviceId string, jobId string) (*Job, *http.Response, error) {
+	url := fmt.Sprintf("services/%s/jobs/%s", serviceId, jobId)
+
+	req, err := s.client.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var job *Job
+	res, err := s.client.Do(ctx, req, &job)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return job, res, nil
+}
